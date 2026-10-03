@@ -1,0 +1,73 @@
+index:
+  title: "Press"
+  eyebrow: "Press kit"
+  lead: "What was written, the biography in three lengths, the pictures to print and who to write to."
+  description: "Press kit: quotes, biographies, high-resolution pictures and press contacts."
+  empty: "The press kit is being put together."
+
+quote:
+  title: "What they say"
+  about: "about {release}"
+
+bio:
+  title: "Biography"
+  note: "Free to reprint, unchanged. Please ask before cutting."
+  length:
+    short: "Short"
+    medium: "Medium"
+    long: "Full"
+  words: "{count, plural, one {# word} other {# words}}"
+  updated: "updated {date}"
+  copy: "Copy"
+  copied: "Copied"
+
+photo:
+  title: "Pictures"
+  note: "Free for editorial use, with the photographer's credit."
+  download: "Download in high resolution"
+
+contact:
+  title: "Contacts"
+
+admin:
+  quote:
+    text: "Quote"
+    text_help: "Without quotation marks: the page adds them."
+    author: "Who"
+    role: "What they are"
+    source: "Publication"
+    url: "Link to the article"
+    date: "Date"
+    release: "About"
+    release_help: "An album, a concert: free words."
+    kind: "Kind"
+    locale: "Language"
+    locale_help: "Empty: shown in every language."
+    position: "Position"
+    featured: "Featured"
+    visible: "Online"
+    action:
+      feature: "Feature"
+    flash:
+      featured: "Quote featured."
+      unfeatured: "Quote no longer featured."
+  photo:
+    file: "Picture"
+    file_help: "The original, as delivered (64 MB at most)."
+    title: "Title"
+    credit: "Credit"
+    credit_help: "The photographer, as it must be printed: © Harald Hoffmann."
+    caption: "Caption"
+    caption_help: "What the picture shows, printed under it (the place, the hall, the date)."
+    position: "Position"
+    downloadable: "Original downloadable"
+    visible: "In the press kit"
+    gallery: "In the gallery"
+  bio:
+    locale: "Language"
+    length: "Length"
+    length_help: "Short: about 100 words. Medium: about 250. Full: as long as it needs."
+    words: "Words"
+    updated_at: "Updated on"
+    content: "Text"
+    content_help: "Plain text, a blank line between two paragraphs. The words are counted under the text."

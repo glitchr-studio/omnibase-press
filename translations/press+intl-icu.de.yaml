@@ -1,0 +1,73 @@
+index:
+  title: "Presse"
+  eyebrow: "Pressemappe"
+  lead: "Was geschrieben wurde, die Biografie in drei Längen, die Fotos zum Abdruck und die Ansprechpartner."
+  description: "Pressemappe: Pressestimmen, Biografien, hochauflösende Fotos und Pressekontakte."
+  empty: "Die Pressemappe wird gerade zusammengestellt."
+
+quote:
+  title: "Pressestimmen"
+  about: "über {release}"
+
+bio:
+  title: "Biografie"
+  note: "Abdruck frei, unverändert. Kürzungen bitte nur nach Rücksprache."
+  length:
+    short: "Kurz"
+    medium: "Mittel"
+    long: "Vollständig"
+  words: "{count, plural, one {# Wort} other {# Wörter}}"
+  updated: "Stand: {date}"
+  copy: "Kopieren"
+  copied: "Kopiert"
+
+photo:
+  title: "Fotos"
+  note: "Frei zur redaktionellen Verwendung, mit Nennung des Fotografen."
+  download: "In hoher Auflösung herunterladen"
+
+contact:
+  title: "Kontakt"
+
+admin:
+  quote:
+    text: "Zitat"
+    text_help: "Ohne Anführungszeichen: die Seite setzt sie."
+    author: "Wer"
+    role: "Funktion"
+    source: "Publikation"
+    url: "Link zum Artikel"
+    date: "Datum"
+    release: "Über"
+    release_help: "Ein Album, ein Konzert: freier Text."
+    kind: "Art"
+    locale: "Sprache"
+    locale_help: "Leer: in allen Sprachen angezeigt."
+    position: "Position"
+    featured: "Hervorgehoben"
+    visible: "Online"
+    action:
+      feature: "Hervorheben"
+    flash:
+      featured: "Zitat hervorgehoben."
+      unfeatured: "Zitat nicht mehr hervorgehoben."
+  photo:
+    file: "Foto"
+    file_help: "Das Original, wie geliefert (höchstens 64 MB)."
+    title: "Titel"
+    credit: "Bildnachweis"
+    credit_help: "Der Fotograf, wie er abzudrucken ist: © Harald Hoffmann."
+    caption: "Bildunterschrift"
+    caption_help: "Was das Bild zeigt, darunter gedruckt (Ort, Saal, Datum)."
+    position: "Position"
+    downloadable: "Original herunterladbar"
+    visible: "In der Pressemappe"
+    gallery: "In der Galerie"
+  bio:
+    locale: "Sprache"
+    length: "Länge"
+    length_help: "Kurz: etwa 100 Wörter. Mittel: etwa 250. Vollständig: so lang wie nötig."
+    words: "Wörter"
+    updated_at: "Stand"
+    content: "Text"
+    content_help: "Reiner Text, eine Leerzeile zwischen zwei Absätzen. Die Wörter werden unter dem Text gezählt."

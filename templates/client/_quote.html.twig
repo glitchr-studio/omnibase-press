@@ -1,0 +1,13 @@
+{# One quote: the words, then who said them, what they are, where it was printed (a link when there is one). #}
+<figure class="press-quote{{ quote.featured ? ' is-featured' }} is-{{ quote.kind.value }}"{% if quote.locale %} lang="{{ quote.locale }}"{% endif %}>
+    <blockquote{% if quote.url %} cite="{{ quote.url }}"{% endif %}><p>{{ quote.text|nl2br }}</p></blockquote>
+    {% if quote.author or quote.role or quote.source %}
+    <figcaption>
+        {% if quote.author %}<b class="press-quote-author">{{ quote.author }}</b>{% endif %}
+        {% if quote.role and quote.role != quote.source %}<span class="press-quote-role">{{ quote.role }}</span>{% endif %}
+        {% if quote.source %}<cite class="press-quote-source">{% if quote.url %}<a href="{{ quote.url }}" rel="noopener" target="_blank">{{ quote.source }}</a>{% else %}{{ quote.source }}{% endif %}</cite>{% endif %}
+        {% if quote.date %}<time datetime="{{ quote.date|date('Y-m-d') }}">{{ quote.date|format_date('long') }}</time>{% endif %}
+        {% if quote.release %}<span class="press-quote-release">{{ '@press.quote.about'|trans({release: quote.release}) }}</span>{% endif %}
+    </figcaption>
+    {% endif %}
+</figure>

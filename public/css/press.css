@@ -1,0 +1,51 @@
+/* omnibase/press: the press page - quotes, biographies, pictures, contacts.
+   Neutral, on the host's custom properties when it defines them
+   (--press-accent, --press-ink, --press-soft, --press-line, --press-surface),
+   else sensible defaults. */
+/* The palette, wherever a piece of the bundle sits: a host's page may include a fragment without the .press wrapper. */
+:where(.press, [class^="press-"], [class*=" press-"]) { --_accent: var(--press-accent, #7a5c2e); --_ink: var(--press-ink, inherit); --_soft: var(--press-soft, #6b6b6b); --_line: var(--press-line, rgba(127,127,127,.25)); --_surface: var(--press-surface, rgba(127,127,127,.06)); }
+.press { width: 100%; max-width: var(--press-measure, 72rem); margin: 0 auto; padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3.5vw, 2.5rem) clamp(3rem, 6vw, 4.5rem); color: var(--_ink); }
+.press-head { margin-bottom: 2rem; }
+.press-head h1 { margin: 0 0 .4rem; font-size: clamp(1.9rem, 3.6vw, 2.8rem); letter-spacing: -.02em; }
+.press-eyebrow { margin: 0 0 .5rem; font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--_soft); }
+.press-lead { max-width: 38rem; font-size: 1.08rem; color: var(--_soft); }
+.press-section { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--_line); }
+.press-section > h2 { margin: 0 0 .75rem; font-size: 1.4rem; }
+.press-note, .press-empty { color: var(--_soft); font-size: .92rem; }
+.press-quote-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1.25rem; }
+.press-quote { margin: 0; padding: 1.25rem 1.4rem; border-left: 3px solid var(--_line); background: var(--_surface); border-radius: 0 .75rem .75rem 0; }
+.press-quote.is-featured { border-left-color: var(--_accent); }
+.press-quote blockquote { margin: 0; font-size: 1.1rem; line-height: 1.55; font-style: italic; quotes: "“" "”" "‘" "’"; }
+.press-quote blockquote p { margin: 0; }
+.press-quote blockquote p::before { content: open-quote; }
+.press-quote blockquote p::after { content: close-quote; }
+.press-quote:lang(fr) blockquote { quotes: "« " " »" "“" "”"; }
+.press-quote:lang(de) blockquote { quotes: "„" "“" "‚" "‘"; }
+.press-quote figcaption { display: flex; flex-wrap: wrap; gap: .15rem .6rem; margin-top: .8rem; font-size: .88rem; color: var(--_soft); }
+.press-quote-author { color: var(--_ink); }
+.press-quote-source { font-style: normal; font-weight: 600; }
+.press-quote-source a { color: var(--_accent); text-decoration: none; }
+.press-quote-source a:hover { text-decoration: underline; }
+.press-bio { margin-top: 1.25rem; padding: 1.1rem 1.25rem; border: 1px solid var(--_line); border-radius: .9rem; }
+.press-bio header { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem 1rem; margin-bottom: .6rem; }
+.press-bio h3 { margin: 0; font-size: 1.1rem; }
+.press-bio header small { color: var(--_soft); }
+.press-bio header .press-button { margin-left: auto; }
+.press-prose { max-width: 46rem; line-height: 1.7; }
+.press-prose p { margin: 0 0 .9rem; }
+.press-prose p:last-child { margin-bottom: 0; }
+.press-plain[hidden] { display: none; }
+.press-plain { width: 100%; min-height: 8rem; }
+.press-photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1.25rem; }
+.press-photo { display: flex; flex-direction: column; margin: 0; border: 1px solid var(--_line); border-radius: .9rem; overflow: hidden; background: var(--_surface); }
+.press-photo img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.press-photo figcaption { display: grid; gap: .3rem; justify-items: start; padding: .85rem 1rem 1rem; font-size: .9rem; }
+.press-photo-credit { color: var(--_soft); }
+.press-contact-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1.25rem; }
+.press-contact { display: grid; gap: .2rem; padding: 1rem 1.1rem; border-radius: .75rem; background: var(--_surface); font-style: normal; }
+.press-contact small { color: var(--_soft); font-size: .78rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.press-contact a { color: var(--_accent); text-decoration: none; overflow-wrap: anywhere; }
+.press-contact a:hover { text-decoration: underline; }
+.press-button { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.2rem; margin-top: .3rem; padding: 0 .95rem; border: 1px solid var(--_accent); border-radius: 2rem; background: var(--_accent); color: #fff; font: inherit; font-size: .85rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+.press-button.is-quiet { margin-top: 0; background: none; color: var(--_accent); }
+@media (max-width: 760px) { .press-quote-list { grid-template-columns: 1fr; } .press-bio header .press-button { margin-left: 0; } }

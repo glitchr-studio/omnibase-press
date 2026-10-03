@@ -1,0 +1,73 @@
+index:
+  title: "Presse"
+  eyebrow: "Dossier de presse"
+  lead: "Ce qui s'est écrit, la biographie en trois longueurs, les photos à imprimer et à qui écrire."
+  description: "Dossier de presse : citations, biographies, photos en haute définition et contacts presse."
+  empty: "Le dossier de presse est en préparation."
+
+quote:
+  title: "Ce qu'on en dit"
+  about: "à propos de {release}"
+
+bio:
+  title: "Biographie"
+  note: "Libre de reproduction, sans modification. Merci de demander avant de couper."
+  length:
+    short: "Courte"
+    medium: "Moyenne"
+    long: "Complète"
+  words: "{count, plural, one {# mot} other {# mots}}"
+  updated: "mise à jour le {date}"
+  copy: "Copier"
+  copied: "Copié"
+
+photo:
+  title: "Photos"
+  note: "Libres pour un usage éditorial, avec le crédit du photographe."
+  download: "Télécharger en haute définition"
+
+contact:
+  title: "Contacts"
+
+admin:
+  quote:
+    text: "Citation"
+    text_help: "Sans guillemets : la page les ajoute."
+    author: "Qui"
+    role: "Sa qualité"
+    source: "Publication"
+    url: "Lien vers l'article"
+    date: "Date"
+    release: "À propos de"
+    release_help: "Un album, un concert : des mots libres."
+    kind: "Nature"
+    locale: "Langue"
+    locale_help: "Vide : affichée dans toutes les langues."
+    position: "Position"
+    featured: "À la une"
+    visible: "En ligne"
+    action:
+      feature: "À la une"
+    flash:
+      featured: "Citation mise à la une."
+      unfeatured: "Citation retirée de la une."
+  photo:
+    file: "Photo"
+    file_help: "L'original, tel que livré (64 Mo au plus)."
+    title: "Titre"
+    credit: "Crédit"
+    credit_help: "Le photographe, tel qu'il doit être imprimé : © Harald Hoffmann."
+    caption: "Légende"
+    caption_help: "Ce que montre la photo, imprimé dessous (le lieu, la salle, la date)."
+    position: "Position"
+    downloadable: "Original téléchargeable"
+    visible: "Dans le dossier de presse"
+    gallery: "Dans la galerie"
+  bio:
+    locale: "Langue"
+    length: "Longueur"
+    length_help: "Courte : environ 100 mots. Moyenne : environ 250. Complète : ce qu'il faut."
+    words: "Mots"
+    updated_at: "Mise à jour le"
+    content: "Texte"
+    content_help: "Texte simple, une ligne vide entre deux paragraphes. Les mots sont comptés sous le texte."

@@ -1,0 +1,105 @@
+{#
+ # The press page: what was written, the biography in three lengths - each
+ # with its "copy" button -, the pictures with their credit and their
+ # original to download, who to write to. The host's layout1.html.twig gives
+ # the chrome; press.css the look.
+ #}
+{% extends 'layout1.html.twig' %}
+
+{% block title %}{{ '@press.index.title'|trans }}{% endblock %}
+{% block description %}{{ '@press.index.description'|trans }}{% endblock %}
+
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/press/css/press.css') }}">{% endblock %}
+
+{% block content %}
+<section class="press press-index">
+    <header class="press-head">
+        <p class="press-eyebrow">{{ '@press.index.eyebrow'|trans }}</p>
+        <h1>{{ '@press.index.title'|trans }}</h1>
+        <p class="press-lead">{{ '@press.index.lead'|trans }}</p>
+    </header>
+
+    {% if quotes %}
+    <section class="press-section press-quotes" id="quotes" aria-label="{{ '@press.quote.title'|trans }}">
+        <h2>{{ '@press.quote.title'|trans }}</h2>
+        <div class="press-quote-list">
+            {% for quote in quotes %}{% include '@Press/client/_quote.html.twig' %}{% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if bios %}
+    <section class="press-section press-bios" id="biography">
+        <h2>{{ '@press.bio.title'|trans }}</h2>
+        <p class="press-note">{{ '@press.bio.note'|trans }}</p>
+        {% for length, bio in bios %}
+        <article class="press-bio is-{{ length }}" lang="{{ bio.locale }}">
+            <header>
+                <h3>{{ ('@press.bio.length.' ~ length)|trans }}</h3>
+                <small>{{ '@press.bio.words'|trans({count: bio.wordCount}) }}{% if bio.updatedAt %} · {{ '@press.bio.updated'|trans({date: bio.updatedAt|format_date('long')}) }}{% endif %}</small>
+                <button type="button" class="press-button is-quiet" data-press-copy="press-bio-{{ length }}" data-press-copied="{{ '@press.bio.copied'|trans }}">{{ '@press.bio.copy'|trans }}</button>
+            </header>
+            <div class="press-prose">{% for paragraph in bio.paragraphs %}<p>{{ paragraph|nl2br }}</p>{% endfor %}</div>
+            {# What "copy" takes: the text as typed, no markup. #}
+            <textarea id="press-bio-{{ length }}" class="press-plain" readonly hidden>{{ bio.content }}</textarea>
+        </article>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if photos %}
+    <section class="press-section press-photos" id="photos">
+        <h2>{{ '@press.photo.title'|trans }}</h2>
+        <p class="press-note">{{ '@press.photo.note'|trans }}</p>
+        <div class="press-photo-grid">
+            {% for photo in photos %}
+            <figure class="press-photo">
+                <img src="{{ photo.fileUrl }}" alt="{{ photo.alt }}" loading="lazy">
+                <figcaption>
+                    {% if photo.title %}<b>{{ photo.title }}</b>{% endif %}
+                    {% if photo.caption %}<span>{{ photo.caption }}</span>{% endif %}
+                    {% if photo.creditLine %}<small class="press-photo-credit">{{ photo.creditLine }}</small>{% endif %}
+                    {% if download_kit and photo.downloadable %}<a class="press-button" href="{{ path('press_photo_download', {id: photo.id}) }}" rel="nofollow" download>{{ '@press.photo.download'|trans }}</a>{% endif %}
+                </figcaption>
+            </figure>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if contacts %}
+    <section class="press-section press-contacts" id="contact">
+        <h2>{{ '@press.contact.title'|trans }}</h2>
+        <div class="press-contact-list">
+            {% for contact in contacts %}
+            <address class="press-contact">
+                {% if contact.role|default %}<small>{{ contact.role }}</small>{% endif %}
+                <b>{{ contact.name }}</b>
+                {% if contact.organisation|default %}<span>{% if contact.url|default %}<a href="{{ contact.url }}" rel="noopener" target="_blank">{{ contact.organisation }}</a>{% else %}{{ contact.organisation }}{% endif %}</span>{% elseif contact.url|default %}<a href="{{ contact.url }}" rel="noopener" target="_blank">{{ contact.url|replace({'https://': '', 'http://': ''})|trim('/') }}</a>{% endif %}
+                {% if contact.email|default %}<a href="mailto:{{ contact.email }}">{{ contact.email }}</a>{% endif %}
+                {% if contact.phone|default %}<a href="tel:{{ contact.phone|replace({' ': ''}) }}">{{ contact.phone }}</a>{% endif %}
+            </address>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if not quotes and not bios and not photos and not contacts %}
+    <p class="press-empty">{{ '@press.index.empty'|trans }}</p>
+    {% endif %}
+</section>
+<script>
+(function () {
+    // "Copy": the plain text of the biography into the clipboard, the button saying so for a moment.
+    document.querySelectorAll('[data-press-copy]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var source = document.getElementById(button.dataset.pressCopy), label = button.textContent;
+            if (!source) return;
+            var done = function () { button.textContent = button.dataset.pressCopied; setTimeout(function () { button.textContent = label; }, 2000); };
+            if (navigator.clipboard) { navigator.clipboard.writeText(source.value).then(done); return; }
+            source.hidden = false; source.select(); document.execCommand('copy'); source.hidden = true; done();
+        });
+    });
+})();
+</script>
+{% endblock %}
