@@ -1,10 +1,12 @@
 <?php
 
 // Standalone (composer install in this checkout) or inside a host application
-// (vendor/omnibase/press): whichever autoloader exists is used, and the test
+// (vendor/omnibase/press - or a path repository's symlink to this checkout,
+// /srv/omnibase/press in the containers: the host is then the directory
+// PHPUnit is run from): whichever autoloader exists is used, and the test
 // namespace is registered by hand because a host's autoloader never reads a
 // dependency's autoload-dev.
-$candidates = [__DIR__.'/../vendor/autoload.php', __DIR__.'/../../../autoload.php'];
+$candidates = [__DIR__.'/../vendor/autoload.php', getcwd().'/vendor/autoload.php', __DIR__.'/../../../autoload.php'];
 foreach ($candidates as $candidate) {
     if (is_file($candidate)) {
         $loader = require $candidate;

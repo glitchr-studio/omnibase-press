@@ -3,6 +3,7 @@
 namespace Base\Press\Controller\Admin\Crud;
 
 use Base\Admin\Attribute\AdminAction;
+use Base\Admin\Attribute\OpenToAdmins;
 use Base\Admin\Config\Action;
 use Base\Admin\Config\Actions;
 use Base\Admin\Controller\AbstractCrudController;
@@ -24,6 +25,7 @@ use Symfony\Contracts\Service\Attribute\Required;
  * One button on each - "feature" - puts a quote among the few a home page
  * shows, or takes it back.
  */
+#[OpenToAdmins(actions: ['feature'])]
 class QuoteCrudController extends AbstractCrudController
 {
     /** @var list<string> */

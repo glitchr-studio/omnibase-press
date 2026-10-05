@@ -2,6 +2,7 @@
 
 namespace Base\Press\Controller\Admin\Crud;
 
+use Base\Admin\Attribute\OpenToAdmins;
 use Base\Admin\Controller\AbstractCrudController;
 use Base\Admin\Filter\Filters;
 use Base\Field\BooleanField;
@@ -17,6 +18,7 @@ use Base\Press\Entity\Photo;
  * credit to print with it, a caption, whether it may be downloaded, and
  * where it is shown: the press kit (/press), the site's gallery, or both.
  */
+#[OpenToAdmins]
 class PhotoCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

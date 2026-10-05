@@ -2,6 +2,7 @@
 
 namespace Base\Press\Controller\Admin\Crud;
 
+use Base\Admin\Attribute\OpenToAdmins;
 use Base\Admin\Controller\AbstractCrudController;
 use Base\Admin\Filter\Filters;
 use Base\Field\DateTimeField;
@@ -18,6 +19,7 @@ use Symfony\Contracts\Service\Attribute\Required;
  * blank line between two paragraphs; the words are counted as they are
  * typed, against what the length is meant to hold (100, 250).
  */
+#[OpenToAdmins]
 class BioCrudController extends AbstractCrudController
 {
     /** @var list<string> */
