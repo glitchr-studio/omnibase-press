@@ -111,3 +111,7 @@ The unit tests (`tests/Entity`, `tests/Service`) need no kernel.
 office, a plain user does not) runs inside a host application
 (`php vendor/bin/phpunit -c vendor/omnibase/press/phpunit.xml.dist`) and is
 skipped elsewhere.
+
+## License
+
+MIT since 2026-10-09; earlier versions remain published under LGPL-3.0-or-later.
