@@ -7,6 +7,8 @@ index:
 
 quote:
   title: "Ce qu'on en dit"
+  original: "Lire l’original ({language})"
+  read_in: "Lire en {language}"
   about: "à propos de {release}"
 
 bio:
@@ -43,6 +45,11 @@ admin:
     kind: "Nature"
     locale: "Langue"
     locale_help: "Vide : affichée dans toutes les langues."
+    language: "Langue d’origine"
+    language_help: "La langue dans laquelle les mots ont été dits ou écrits."
+    offer_original: "Proposer l’original"
+    translation: "Traduction ({language})"
+    role_in: "Qualité ({language})"
     position: "Position"
     featured: "À la une"
     visible: "En ligne"

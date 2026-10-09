@@ -100,4 +100,33 @@ final class QuoteTest extends TestCase
         self::assertSame('Radiant.', (string) new Quote('Radiant.'));
         self::assertSame(60, mb_strwidth((string) new Quote(str_repeat('word ', 40))));
     }
+
+    public function testAReaderGetsTheWordsInTheirLanguageAndMayAskForTheOriginal(): void
+    {
+        $quote = (new Quote('A superb musician.', 'Semyon Bychkov'))->setRole('conductor')->setLanguage('en')
+            ->setTranslations(['fr' => ['text' => '« Une musicienne superbe. »', 'role' => 'chef d’orchestre'], 'de' => 'Eine großartige Musikerin.']);
+
+        // Translated: the words and the speaker's quality in the reader's language, the quotation marks gone.
+        self::assertTrue($quote->isTranslatedIn('fr'));
+        self::assertSame('Une musicienne superbe.', $quote->getTextIn('fr_FR'));
+        self::assertSame('chef d’orchestre', $quote->getRoleIn('fr'));
+        // A bare string is the words; the quality stays as typed.
+        self::assertSame('Eine großartige Musikerin.', $quote->getTextIn('de'));
+        self::assertSame('conductor', $quote->getRoleIn('de'));
+        // The original's own language, and one without a translation: the words as they were said.
+        self::assertFalse($quote->isTranslatedIn('en'));
+        self::assertFalse($quote->isTranslatedIn('it'));
+        self::assertSame('A superb musician.', $quote->getTextIn('it'));
+        self::assertTrue($quote->isOfferOriginal());
+
+        // The back office's fields, one pair per language.
+        $quote->translation_it = 'Una musicista superba.';
+        $quote->role_it = 'direttore d’orchestra';
+        self::assertSame('Una musicista superba.', $quote->getTextIn('it'));
+        self::assertSame('direttore d’orchestra', $quote->role_it);
+        $quote->translation_it = '';
+        $quote->role_it = null;
+        self::assertFalse($quote->isTranslatedIn('it'), 'emptied, a translation is gone');
+        self::assertArrayNotHasKey('it', $quote->getTranslations());
+    }
 }

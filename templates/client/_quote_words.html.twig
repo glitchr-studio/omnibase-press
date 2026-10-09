@@ -1,0 +1,37 @@
+{#
+ # A quote's words, with who said them: first as they were said, in their own
+ # language; a reader of another one may ask for the translation (when the
+ # back office has one, and offers the switch) - the words then change in
+ # place, the original's going out one after the other as the translation's
+ # come in, and back. No script: a checkbox and its label (public/css/quote.css).
+ # Inside a <figure>:
+ #   {% include '@Press/client/_quote_words.html.twig' with {quote: quote} %}
+ #   {% include '@Press/client/_quote_words.html.twig' with {quote: quote, caption: false} %}  the words and the switch only
+ #}
+{% set reading = app.request ? app.request.locale : 'en' %}
+{% set translated = quote.translatedIn(reading) %}
+{% set switch = translated and quote.offerOriginal %}
+{% set role = quote.role %}
+{% set role_there = quote.roleIn(reading) %}
+<link rel="stylesheet" href="{{ asset('bundles/press/css/quote.css') }}">
+{% if switch %}<input class="press-words-toggle" type="checkbox" id="press-words-{{ quote.id }}" aria-label="{{ '@press.quote.read_in'|trans({language: reading|language_name(reading)}) }}">{% endif %}
+<div class="press-words{{ switch ? ' has-switch' }}">
+    {% if switch or not translated %}
+    <blockquote class="press-words-said"{% if quote.language %} lang="{{ quote.language }}"{% endif %}{% if quote.url|default %} cite="{{ quote.url }}"{% endif %}>{% for word in quote.text|split(' ') %}<span style="--i: {{ loop.index0 }}">{{ loop.first ? '“' }}{{ word }}{{ loop.last ? '”' }}</span>{{ not loop.last ? ' ' }}{% endfor %}</blockquote>
+    {% endif %}
+    {% if translated %}
+    <blockquote class="press-words-read" lang="{{ reading|slice(0, 2) }}">{% for word in quote.textIn(reading)|split(' ') %}<span style="--i: {{ loop.index0 }}">{{ loop.first ? '“' }}{{ word }}{{ loop.last ? '”' }}</span>{{ not loop.last ? ' ' }}{% endfor %}</blockquote>
+    {% endif %}
+</div>
+{% if caption ?? true %}
+<figcaption class="press-words-by">{{ quote.author }}
+    {%- if switch and role_there != role -%}
+        <span class="press-words-said">{% if role %} · {{ role }}{% endif %}</span><span class="press-words-read">{% if role_there %} · {{ role_there }}{% endif %}</span>
+    {%- else -%}
+        {% set shown = translated ? role_there : role %}{% if shown %} · {{ shown }}{% endif %}
+    {%- endif -%}
+</figcaption>
+{% endif %}
+{% if switch %}
+<label class="press-words-switch" for="press-words-{{ quote.id }}"><span class="press-words-said">{{ '@press.quote.read_in'|trans({language: reading|language_name(reading)}) }}</span><span class="press-words-read">{{ '@press.quote.original'|trans({language: quote.language ? quote.language|language_name(reading) : ''})|replace({' ()': ''}) }}</span></label>
+{% endif %}

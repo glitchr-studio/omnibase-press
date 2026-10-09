@@ -7,6 +7,8 @@ index:
 
 quote:
   title: "Pressestimmen"
+  original: "Original lesen ({language})"
+  read_in: "Auf {language} lesen"
   about: "über {release}"
 
 bio:
@@ -43,6 +45,11 @@ admin:
     kind: "Art"
     locale: "Sprache"
     locale_help: "Leer: in allen Sprachen angezeigt."
+    language: "Originalsprache"
+    language_help: "Die Sprache, in der die Worte gesagt oder geschrieben wurden."
+    offer_original: "Original anbieten"
+    translation: "Übersetzung ({language})"
+    role_in: "Funktion ({language})"
     position: "Position"
     featured: "Hervorgehoben"
     visible: "Online"

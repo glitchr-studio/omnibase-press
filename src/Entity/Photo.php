@@ -65,7 +65,6 @@ class Photo
     public function getId(): ?int { return $this->id; }
 
     public function getFile(): ?string { return Uploader::getPublic($this, 'file'); }
-    public function getFileFile(): ?File { return Uploader::get($this, 'file'); }
     public function setFile($file): self { $this->file = $file; return $this; }
     /** Whether a picture is set, without asking the storage where it is. */
     public function hasFile(): bool { return null !== $this->file && '' !== $this->file; }

@@ -1,0 +1,30 @@
+/*
+ * A quote read as it was said, and in translation on request
+ * (templates/client/_quote_words.html.twig): the two sets of words lie on
+ * one another; the checkbox says which shows. Going from one to the other,
+ * each word leaves in its turn - fading, a little blurred, a hair up - as the
+ * word of the other language comes in at its place.
+ */
+.press-words-toggle { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }
+.press-words { display: grid; }
+.press-words > blockquote { grid-area: 1 / 1; margin: 0; }
+.press-words span { display: inline-block; transition: opacity .5s ease, filter .5s ease, translate .5s ease; transition-delay: calc(var(--i, 0) * 22ms); }
+
+/* What does not show: out of the way of the pointer and of a screen reader, once its words have gone. */
+.press-words.has-switch .press-words-read, .press-words-toggle:checked ~ .press-words .press-words-said { visibility: hidden; transition: visibility 0s linear .9s; }
+.press-words.has-switch .press-words-read span, .press-words-toggle:checked ~ .press-words .press-words-said span { opacity: 0; filter: blur(6px); translate: 0 -.18em; transition-duration: .32s; transition-delay: calc(var(--i, 0) * 9ms); }
+.press-words-toggle:checked ~ .press-words .press-words-read { visibility: visible; transition: visibility 0s; }
+.press-words-toggle:checked ~ .press-words .press-words-read span { opacity: 1; filter: none; translate: 0 0; transition-duration: .5s; transition-delay: calc(.12s + var(--i, 0) * 22ms); }
+.press-words.has-switch .press-words-said span { transition-delay: calc(.12s + var(--i, 0) * 22ms); }
+
+/* The speaker's quality and the switch's own words follow. */
+.press-words-by .press-words-said, .press-words-by .press-words-read, .press-words-switch .press-words-said, .press-words-switch .press-words-read { transition: opacity .4s ease; }
+.press-words-by .press-words-read, .press-words-switch .press-words-read { display: none; }
+.press-words-toggle:checked ~ .press-words-by .press-words-said, .press-words-toggle:checked ~ .press-words-switch .press-words-said { display: none; }
+.press-words-toggle:checked ~ .press-words-by .press-words-read, .press-words-toggle:checked ~ .press-words-switch .press-words-read { display: inline; }
+
+.press-words-switch { display: inline-block; margin-top: 1rem; cursor: pointer; font-size: .85rem; opacity: .7; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .28em; transition: opacity .2s; }
+.press-words-switch:hover { opacity: 1; }
+.press-words-toggle:focus-visible ~ .press-words-switch { outline: 2px solid currentColor; outline-offset: 4px; opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) { .press-words span { transition: opacity .2s ease !important; filter: none !important; translate: none !important; } }

@@ -16,9 +16,11 @@ use Base\Field\SelectField;
 use Base\Field\TextareaField;
 use Base\Field\TextField;
 use Base\Press\Entity\Quote;
+use Base\Press\Enum\QuoteKind;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\Attribute\Required;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Filing what was said: the words, who said them and where, what about.
@@ -38,6 +40,14 @@ class QuoteCrudController extends AbstractCrudController
         $this->locales = $locales ?: $this->locales;
     }
 
+    private ?TranslatorInterface $pressTranslator = null;
+
+    #[Required]
+    public function setPressTranslator(TranslatorInterface $translator): void
+    {
+        $this->pressTranslator = $translator;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Quote::class;
@@ -53,6 +63,14 @@ class QuoteCrudController extends AbstractCrudController
         return $filters->add('kind')->add('featured')->add('locale');
     }
 
+    /** "Translation (FR)": a label with the language in it, translated here (the fields translate bare keys only). */
+    private function label(string $key, string $locale): string
+    {
+        $id = 'admin.quote.'.$key;
+
+        return $this->pressTranslator?->trans($id, ['language' => strtoupper($locale)], 'press') ?? $key.' '.strtoupper($locale);
+    }
+
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')->onlyOnIndex();
@@ -63,8 +81,17 @@ class QuoteCrudController extends AbstractCrudController
         yield TextField::new('url', '@press.admin.quote.url')->setColumns(6)->setRequired(false)->hideOnIndex();
         yield DateField::new('date', '@press.admin.quote.date')->setColumns(3)->setRequired(false);
         yield TextField::new('release', '@press.admin.quote.release')->setColumns(3)->setRequired(false)->hideOnIndex()->setHelp('@press.admin.quote.release_help');
-        yield SelectField::new('kind', '@press.admin.quote.kind')->setColumns(3);
+        // (The choices spelled out: the field cannot guess them from the enum before it has the quote.)
+        yield SelectField::new('kind', '@press.admin.quote.kind')->setChoices(array_combine(array_column(QuoteKind::cases(), 'value'), array_column(QuoteKind::cases(), 'value')))->setColumns(3);
         yield SelectField::new('locale', '@press.admin.quote.locale')->setChoices(array_combine($this->locales, $this->locales))->setRequired(false)->setColumns(3)->setHelp('@press.admin.quote.locale_help');
+        // The original's language, and its translations: one pair of fields (the words, the speaker's quality) per other language of the site.
+        yield SelectField::new('language', '@press.admin.quote.language')->setChoices(array_combine($this->locales, $this->locales))->setRequired(false)->setColumns(3)->hideOnIndex()->setHelp('@press.admin.quote.language_help');
+        yield BooleanField::new('offerOriginal', '@press.admin.quote.offer_original')->setColumns(3)->hideOnIndex();
+        foreach ($this->locales as $locale) {
+            $locale = substr($locale, 0, 2);
+            yield TextareaField::new('translation_'.$locale, $this->label('translation', $locale))->setRequired(false)->setColumns(8)->onlyOnForms();
+            yield TextField::new('role_'.$locale, $this->label('role_in', $locale))->setRequired(false)->setColumns(4)->onlyOnForms();
+        }
         yield IntegerField::new('position', '@press.admin.quote.position')->setColumns(2);
         yield BooleanField::new('featured', '@press.admin.quote.featured')->setColumns(2);
         yield BooleanField::new('visible', '@press.admin.quote.visible')->setColumns(2);

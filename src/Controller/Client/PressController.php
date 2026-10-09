@@ -2,6 +2,7 @@
 
 namespace Base\Press\Controller\Client;
 
+use Base\Database\Attribute\Uploader;
 use Base\Attributes\Attribute\Sitemap;
 use Base\Press\Repository\BioRepository;
 use Base\Press\Repository\PhotoRepository;
@@ -63,7 +64,7 @@ class PressController extends AbstractController
         if (!$photo || !$photo->isVisible() || !$photo->isDownloadable() || !$this->downloadKit) {
             throw $this->createNotFoundException(sprintf('No picture to download at "%d".', $id));
         }
-        $file = $photo->getFileFile() ?? throw $this->createNotFoundException('The picture has no file.');
+        $file = Uploader::get($photo, 'file') ?? throw $this->createNotFoundException('The picture has no file.');
 
         $name = PhotoFilename::of($this->siteName($request), $photo->getTitle(), $photo->getCredit(), $photo->getId(), $file->guessExtension() ?: $file->getExtension());
         $response = $this->file($file, $name, ResponseHeaderBag::DISPOSITION_ATTACHMENT);

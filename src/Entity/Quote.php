@@ -12,9 +12,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * "violinist"), where ("BBC Music Magazine", with its link and date), and
  * what about (the album, the concert - a free reference, no relation).
  *
- * One row is one language: the text and the locale it is in. A quote with
- * no locale is shown in every language (a line nobody would translate); a
- * translated one is a second row.
+ * The words are kept as they were said or written (`language` says in which
+ * tongue), with their translations beside them (`translations`: per
+ * language, the words and the speaker's quality): a reader sees the words in
+ * their own language when there is a translation, and may ask for the
+ * original (`offerOriginal`). `locale` only restricts a quote to the readers
+ * of one language (empty: shown to all).
  */
 #[ORM\Entity(repositoryClass: QuoteRepository::class)]
 #[ORM\Table(name: 'press_quote')]
@@ -34,6 +37,19 @@ class Quote
     #[ORM\Column(length: 5, nullable: true)]
     #[Assert\Length(max: 5)]
     protected ?string $locale = null;
+
+    /** The language the words were said or written in ("en"): what "the original" is, and its lang attribute. */
+    #[ORM\Column(length: 5, nullable: true)]
+    #[Assert\Length(max: 5)]
+    protected ?string $language = null;
+
+    /** @var array<string, array{text?: string, role?: string}>|null per language, the words translated and the speaker's quality */
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $translations = null;
+
+    /** Whether a translated quote lets the reader see the original words. */
+    #[ORM\Column(name: 'offer_original', type: 'boolean', options: ['default' => true])]
+    protected bool $offerOriginal = true;
 
     /** Who speaks: a critic, a colleague. Empty when only the paper signs. */
     #[ORM\Column(length: 160, nullable: true)]
@@ -135,6 +151,94 @@ class Quote
 
     public function isVisible(): bool { return $this->visible; }
     public function setVisible(bool $visible): self { $this->visible = $visible; return $this; }
+
+    public function getLanguage(): ?string { return $this->language ?? $this->locale; }
+    public function setLanguage(?string $language): self { $this->language = $language ? mb_strtolower(substr(trim($language), 0, 5)) : null; return $this; }
+
+    public function isOfferOriginal(): bool { return $this->offerOriginal; }
+    public function setOfferOriginal(bool $offer): self { $this->offerOriginal = $offer; return $this; }
+
+    /** @return array<string, array{text?: string, role?: string}> */
+    public function getTranslations(): array { return $this->translations ?? []; }
+
+    /** @param array<string, array{text?: string, role?: string}|string>|null $translations a bare string is the words */
+    public function setTranslations(?array $translations): self
+    {
+        $this->translations = null;
+        foreach ($translations ?? [] as $locale => $row) {
+            $row = \is_array($row) ? $row : ['text' => $row];
+            $this->setTranslation((string) $locale, $row['text'] ?? null, $row['role'] ?? null);
+        }
+
+        return $this;
+    }
+
+    /** The words (and, when given, the speaker's quality) in one language; nothing of either removes it. */
+    public function setTranslation(string $locale, ?string $text, ?string $role = null): self
+    {
+        $locale = mb_strtolower(substr(trim($locale), 0, 2));
+        $text = preg_replace('/^["“”«»„\s]+|["“”«»\s]+$/u', '', trim((string) $text));
+        $row = array_filter(['text' => $text, 'role' => self::clean($role)], static fn ($v) => null !== $v && '' !== $v);
+        $all = $this->translations ?? [];
+        if ($row) {
+            $all[$locale] = $row;
+        } else {
+            unset($all[$locale]);
+        }
+        $this->translations = $all ?: null;
+
+        return $this;
+    }
+
+    private function translation(string $locale): array
+    {
+        return $this->translations[mb_strtolower(substr($locale, 0, 2))] ?? [];
+    }
+
+    /** Whether a reader of $locale reads a translation (there is one, and it is not the original's language). */
+    public function isTranslatedIn(string $locale): bool
+    {
+        return isset($this->translation($locale)['text']) && mb_strtolower(substr($locale, 0, 2)) !== $this->getLanguage();
+    }
+
+    /** The words for a reader of $locale: the translation, else the original. */
+    public function getTextIn(string $locale): ?string
+    {
+        return $this->isTranslatedIn($locale) ? $this->translation($locale)['text'] : $this->text;
+    }
+
+    /** The speaker's quality for a reader of $locale ("chef d'orchestre"), else as typed. */
+    public function getRoleIn(string $locale): ?string
+    {
+        return $this->translation($locale)['role'] ?? $this->role;
+    }
+
+    /**
+     * The back office's fields, one pair per language of the site:
+     * translation_fr (the words) and role_fr (the quality) read and write
+     * `translations`.
+     */
+    public function __isset(string $name): bool { return 1 === preg_match('/^(translation|role)_[a-z]{2}$/', $name); }
+
+    public function __get(string $name): ?string
+    {
+        if (!preg_match('/^(translation|role)_([a-z]{2})$/', $name, $m)) {
+            throw new \LogicException(sprintf('No property "%s" on a quote.', $name));
+        }
+
+        return $this->translation($m[2])['translation' === $m[1] ? 'text' : 'role'] ?? null;
+    }
+
+    public function __set(string $name, mixed $value): void
+    {
+        if (!preg_match('/^(translation|role)_([a-z]{2})$/', $name, $m)) {
+            throw new \LogicException(sprintf('No property "%s" on a quote.', $name));
+        }
+        $now = $this->translation($m[2]);
+        'translation' === $m[1]
+            ? $this->setTranslation($m[2], null !== $value ? (string) $value : null, $now['role'] ?? null)
+            : $this->setTranslation($m[2], $now['text'] ?? null, null !== $value ? (string) $value : null);
+    }
 
     /** Shown to a reader of $locale: written in it, or in no language in particular. */
     public function speaks(string $locale): bool

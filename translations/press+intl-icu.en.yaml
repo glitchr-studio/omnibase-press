@@ -7,6 +7,8 @@ index:
 
 quote:
   title: "What they say"
+  original: "Read the original ({language})"
+  read_in: "Read in {language}"
   about: "about {release}"
 
 bio:
@@ -43,6 +45,11 @@ admin:
     kind: "Kind"
     locale: "Language"
     locale_help: "Empty: shown in every language."
+    language: "Original language"
+    language_help: "The language the words were said or written in."
+    offer_original: "Offer the original"
+    translation: "Translation ({language})"
+    role_in: "Quality ({language})"
     position: "Position"
     featured: "Featured"
     visible: "Online"

@@ -11,6 +11,7 @@ use Base\Field\IntegerField;
 use Base\Field\SelectField;
 use Base\Field\TextareaField;
 use Base\Press\Entity\Bio;
+use Base\Press\Enum\BioLength;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Service\Attribute\Required;
 
@@ -51,7 +52,7 @@ class BioCrudController extends AbstractCrudController
     {
         yield IdField::new('id')->onlyOnIndex();
         yield SelectField::new('locale', '@press.admin.bio.locale')->setChoices(array_combine($this->locales, $this->locales))->setColumns(3);
-        yield SelectField::new('length', '@press.admin.bio.length')->setColumns(3)->setHelp('@press.admin.bio.length_help');
+        yield SelectField::new('length', '@press.admin.bio.length')->setChoices(array_combine(array_column(BioLength::cases(), 'value'), array_column(BioLength::cases(), 'value')))->setColumns(3)->setHelp('@press.admin.bio.length_help');
         yield IntegerField::new('wordCount', '@press.admin.bio.words')->onlyOnIndex();
         yield DateTimeField::new('updatedAt', '@press.admin.bio.updated_at')->onlyOnIndex();
         yield TextareaField::new('content', '@press.admin.bio.content')->setNumOfRows(18)->hideOnIndex()
